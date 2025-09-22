@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coursera Prototype</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    /* Top Row */
+    .top-row { background-color: black; color: white; display: flex; padding: 5px 150px; font-size: 9pt; flex-wrap: wrap; }
+    .top-row div { text-align: left; margin-right: 15px; }
+
+    /* Header Row */
+    .header-row { height: 30pt; display: flex; align-items: center; background-color: white; white-space: nowrap; padding-left: 150px; padding-right: 150px; }
+    .menu-icon { font-size: 14pt; cursor: pointer; color: #0056D2; line-height: 30pt; display: none; background: none; border: none; }
+    .logo { font-weight: bold; font-size: 10pt; color: #0056D2; line-height: 30pt; flex-shrink: 0; }
+    .explore-btn { margin-left: 15px; font-size: 9pt; color: #0056D2; background: none; border: none; cursor: pointer; line-height: 30pt; flex-shrink: 0; }
+    .search-bar { margin-left: 40px; position: relative; flex-grow: 1; }
+    .search-bar input { width: 100%; height: 24px; padding-right: 25px; padding-left: 5px; border-radius: 4px; border: 1px solid #ccc; font-size: 9pt; vertical-align: middle; }
+    .search-bar .search-icon { position: absolute; right: 5px; top: 50%; transform: translateY(-50%); font-size: 9pt; color: #0056D2; }
+    .right-items { margin-left: 20px; display: flex; align-items: center; gap: 12px; font-size: 9pt; flex-shrink: 0; }
+    .right-items span, .right-items button { line-height: 30pt; }
+    .ash-text { color: #6c757d; }
+    .blue-text { color: #0056D2; }
+    .join-btn { color: #0056D2; border: 2px solid #0056D2; border-radius: 4px; padding: 2px 6px; background: none; cursor: pointer; line-height: 30pt; font-size: 9pt; flex-shrink: 0; }
+
+    /* Discount Row */
+    .discount-row { height: 250pt; background-color: #0565f4; display: flex; flex-direction: column; justify-content: center; align-items: center; font-size: 20pt; color: #f0f2f5; text-align: center; padding: 20px; gap: 20px; }
+    .discount-btn { font-size: 12pt; padding: 10px 20px; border-radius: 6px; cursor: pointer; transition: 0.3s; border: none; }
+    .coursera-plus { color: #0056D2; background-color: white; border: none; }
+    .teams { color: white; background-color: transparent; border: 2px solid white; }
+    .discount-btn:hover { opacity: 0.8; }
+
+    /* Collaboration Row */
+    .collab-row { background-color: #f0f4ff; text-align: center; padding: 40px 20px; }
+    .collab-row .text { font-size: 18pt; margin-bottom: 30px; }
+    .collab-row .text .black { color: black; }
+    .collab-row .text .blue { color: #0056D2; }
+    .collab-logos { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 30px; }
+    .collab-logos img { height: 50px; object-fit: contain; max-width: 120px; }
+
+    /* Purpose Row */
+    .purpose-row { background-color: #ffffff; text-align: center; padding: 40px 20px; }
+    .purpose-row .title { font-size: 18pt; font-weight: 500; margin-bottom: 30px; }
+    .purpose-cols { display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; }
+    .purpose-col { border: 1px solid #6c757d; color: black; padding: 30px 20px; min-width: 180px; cursor: pointer; border-radius: 6px; transition: 0.3s; display: flex; align-items: center; gap: 10px; }
+    .purpose-col img { width: 24px; height: 24px; }
+    .purpose-col:hover { background-color: #f8f9fa; }
+
+    /* Role Row */
+    .role-row { background-color: #f8f9fa; text-align: center; padding: 40px 20px; }
+    .role-row .title { font-size: 18pt; font-weight: 500; margin-bottom: 30px; }
+    .role-cols { display: flex; flex-wrap: nowrap; justify-content: center; gap: 10px; align-items: center; }
+    .role-col { min-width: 120px; padding: 10px; font-size: 10pt; border: none; background-color: none; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; }
+    .role-col select { width: 100%; padding: 5px; border-radius: 4px; border: 1px solid #6c757d; font-size: 12pt; } 
+    .role-col div { font-weight: 500; margin-bottom: 5px; font-size: 12pt; }
+    .role-separator { border-left: 1px solid #6c757d; min-height: 50px; align-self: center; }
+    .role-col img { width: 24px; height: 24px; }
+
+    /* Department Roles Row */
+    .department-roles-row { background-color: #f8f9fa; text-align: center; padding: 20px; }
+    .department-roles-row .dept-content { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; }
+    .department-roles-row .role-card { border: 1px solid #6c757d; padding: 15px 20px; border-radius: 6px; min-width: 200px; max-width: 250px; text-align: center; background-color: white; }
+
+    /* Responsive adjustments */
+    @media (max-width: 992px) {
+      .top-row { display: none; }
+      .header-row { padding-left: 20px; padding-right: 20px; }
+      .menu-icon { display: block; margin-right: 10px; }
+      .right-items, .explore-btn { display: none; }
+      .mobile-menu-item { font-size: 8pt; color: #6c757d !important; background: none; border: none; padding: 5px 0; text-align: left; width: 100%; }
+      .mobile-menu-item:hover { text-decoration: underline; }
+      .discount-row { height: auto; font-size: 16pt; }
+      .discount-btn { width: 80%; max-width: 250px; }
+      .collab-row .text { font-size: 16pt; }
+      .collab-logos img { height: 40px; max-width: 90px; }
+      .purpose-row .title, .role-row .title { font-size: 16pt; }
+      .purpose-col { min-width: 140px; padding: 20px 10px; font-size: 9pt; }
+      .role-cols { flex-wrap: wrap; justify-content: center; }
+      .purpose-col img, .role-col img { width: 20px; height: 20px; }
+      .role-col { flex: 1 1 120px; min-width: 120px; max-width: 150px; }
+      .role-separator { min-height: 60px; }
+    }
+
+    /* Active department highlight */
+    .role-col.active { border-color: #0056D2; background-color: #e6f0ff; }
+  </style>
+</head>
+<body>
+
+  <!-- Top Row -->
+  <div class="top-row">
+    <div>For Individuals</div>
+    <div>For Businesses</div>
+    <div>For Universities</div>
+    <div>For Governments</div>
+  </div>
+
+  <!-- Navbar/Header -->
+  <nav class="navbar navbar-expand-lg bg-white">
+    <div class="header-row w-100">
+      <button class="menu-icon" type="button" data-bs-toggle="collapse" data-bs-target="#mobileMenu">≡</button>
+      <div class="logo">Coursera</div>
+      <button class="explore-btn d-none d-lg-block">Explore</button>
+      <div class="search-bar">
+        <input type="text" placeholder="What do you want to learn?">
+        <span class="search-icon">🔎</span>
+      </div>
+      <div class="right-items d-none d-lg-flex">
+        <span class="ash-text">Online Degrees</span>
+        <span class="ash-text">Careers</span>
+        <span class="blue-text">Log in</span>
+        <button class="join-btn">Join for Free</button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div class="collapse bg-white" id="mobileMenu">
+      <div class="d-flex flex-column p-2 d-lg-none">
+        <button class="mobile-menu-item">Explore</button>
+        <button class="mobile-menu-item">Online Degrees</button>
+        <button class="mobile-menu-item">Careers</button>
+        <button class="mobile-menu-item">Log in</button>
+        <button class="mobile-menu-item">Join for Free</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Discount Row -->
+  <div class="discount-row">
+    <div>🎉 Get exclusive discounts on Coursera courses! Learn more and save today!</div>
+    <div class="discount-btn-container d-flex flex-column flex-lg-row gap-2">
+      <button class="discount-btn coursera-plus">Save on Coursera Plus</button>
+      <button class="discount-btn teams">Save on Teams</button>
+    </div>
+  </div>
+
+  <!-- Collaboration Row -->
+  <div class="collab-row">
+    <div class="text">
+      <span class="black">We collaborate with </span>
+      <span class="blue">350+ leading universities and companies</span>
+    </div>
+    <div class="collab-logos">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Microsoft_Edge_logo_%282019%29.png" alt="Microsoft">
+      <img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/44/MIT_Seal.svg/1027px-MIT_Seal.svg.png" alt="MIT">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/IBM_logo.svg/1920px-IBM_logo.svg.png" alt="IBM">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Yale_University_Shield_1.svg/255px-Yale_University_Shield_1.svg.png" alt="Yale">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Meta_Platforms_Inc._logo.svg/1920px-Meta_Platforms_Inc._logo.svg.png" alt="Meta">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Amazon_2024.svg/1920px-Amazon_2024.svg.png" alt="Amazon">
+      <img src="https://upload.wikimedia.org/wikipedia/en/thumb/d/da/BUET_LOGO.svg/1024px-BUET_LOGO.svg.png" alt="BUET">
+    </div>
+  </div>
+
+  <!-- Purpose Row -->
+  <div class="purpose-row">
+    <div class="title">What brings you to Coursera today?</div>
+    <div class="purpose-cols">
+      <div class="purpose-col">
+        <img src="https://i.pinimg.com/736x/31/2a/f9/312af9235aadad69655688eaee97eabf.jpg" alt="Career">
+        Start my career
+      </div>
+      <div class="purpose-col">
+        <img src="https://image.pngaaa.com/506/4428506-middle.png" alt="Change">
+        Change my career
+      </div>
+      <div class="purpose-col">
+        <img src="https://cdn-icons-png.flaticon.com/512/3024/3024328.png" alt="Grow">
+        Grow in my current role
+      </div>
+      <div class="purpose-col">
+        <img src="https://static.vecteezy.com/system/resources/thumbnails/017/784/742/small_2x/magnifying-glass-loupe-icon-button-search-icon-png.png" alt="Explore">
+        Explore topics outside of work
+      </div>
+    </div>
+  </div>
+
+  <!-- Choose Your Role Row -->
+  <div class="role-row">
+    <div class="title">Choose Your Role</div>
+    <div class="role-cols">
+      <!-- Level Column -->
+      <div class="role-col">
+        <select>
+          <option>Beginner</option>
+          <option>Intermediate</option>
+          <option>Advanced</option>
+        </select>
+      </div>
+
+      <!-- Separator -->
+      <div class="role-separator d-none d-lg-block"></div>
+
+      <!-- Departments -->
+      <div class="role-col"><div>Popular</div></div>
+      <div class="role-col"><div>Software Engineering & IT</div></div>
+      <div class="role-col"><div>Business</div></div>
+      <div class="role-col"><div>Sales & Marketing</div></div>
+      <div class="role-col"><div>Data Science & Analytics</div></div>
+      <div class="role-col"><div>Healthcare</div></div>
+    </div>
+  </div>
+
+  <!-- Department Roles Sub-Row -->
+  <div class="department-roles-row">
+    <div class="dept-content d-flex flex-wrap justify-content-center gap-3">
+      <div class="role-card">
+        <h5>Data Analyst</h5>
+        <p>Generate insights from data.</p>
+      </div>
+      <div class="role-card">
+        <h5>Data Scientist</h5>
+        <p>Analyze and interpret complex data.</p>
+      </div>
+      <div class="role-card">
+        <h5>Machine Learning Engineer</h5>
+        <p>Build and deploy ML models.</p>
+      </div>
+    </div>
+
+    <!-- Explore Button -->
+    <div class="mt-4">
+      <button class="btn btn-primary px-4 py-2" style="border-radius:6px;">
+        Explore All Roles
+      </button>
+    </div>
+  </div>
+
+  <!-- Explore Coursera Row -->
+<div class="explore-coursera-row" style="background-color:#f8f9fa; text-align:center; padding:40px 20px;">
+  <div class="title" style="font-size:18pt; font-weight:500; margin-bottom:30px;">Explore Coursera</div>
+  
+  <div class="d-flex flex-wrap justify-content-center gap-3" style="max-width:1200px; margin:0 auto;">
+
+    <!-- Course 1 -->
+    <div class="course-card d-flex align-items-center" style="flex:1 1 30%; padding:10px 0;">
+      <img src="https://cdn-icons-png.flaticon.com/512/888/888847.png" alt="AI" style="width:60px; height:60px; object-fit:cover; margin-right:15px;">
+      <h6 class="mb-0">AI for Everyone</h6>
+    </div>
+
+    <!-- Course 2 -->
+    <div class="course-card d-flex align-items-center" style="flex:1 1 30%; padding:10px 0;">
+      <img src="https://cdn-icons-png.flaticon.com/512/1995/1995574.png" alt="ML" style="width:60px; height:60px; object-fit:cover; margin-right:15px;">
+      <h6 class="mb-0">Machine Learning</h6>
+    </div>
+
+    <!-- Course 3 -->
+    <div class="course-card d-flex align-items-center" style="flex:1 1 30%; padding:10px 0;">
+      <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" alt="Data Analytics" style="width:60px; height:60px; object-fit:cover; margin-right:15px;">
+      <h6 class="mb-0">Data Analytics</h6>
+    </div>
+
+    <!-- Course 4 -->
+    <div class="course-card d-flex align-items-center" style="flex:1 1 30%; padding:10px 0;">
+      <img src="https://cdn-icons-png.flaticon.com/512/3062/3062634.png" alt="Cybersecurity" style="width:60px; height:60px; object-fit:cover; margin-right:15px;">
+      <h6 class="mb-0">Cybersecurity Basics</h6>
+    </div>
+
+    <!-- Course 5 -->
+    <div class="course-card d-flex align-items-center" style="flex:1 1 30%; padding:10px 0;">
+      <img src="https://cdn-icons-png.flaticon.com/512/3135/3135710.png" alt="Marketing" style="width:60px; height:60px; object-fit:cover; margin-right:15px;">
+      <h6 class="mb-0">Marketing Fundamentals</h6>
+    </div>
+
+    <!-- Course 6 -->
+    <div class="course-card d-flex align-items-center" style="flex:1 1 30%; padding:10px 0;">
+      <img src="https://cdn-icons-png.flaticon.com/512/3144/3144456.png" alt="Business Analytics" style="width:60px; height:60px; object-fit:cover; margin-right:15px;">
+      <h6 class="mb-0">Business Analytics</h6>
+    </div>
+
+    <!-- Course 7 -->
+    <div class="course-card d-flex align-items-center" style="flex:1 1 30%; padding:10px 0;">
+      <img src="https://cdn-icons-png.flaticon.com/512/919/919828.png" alt="Frontend" style="width:60px; height:60px; object-fit:cover; margin-right:15px;">
+      <h6 class="mb-0">Frontend Development</h6>
+    </div>
+
+    <!-- Course 8 -->
+    <div class="course-card d-flex align-items-center" style="flex:1 1 30%; padding:10px 0;">
+      <img src="https://cdn-icons-png.flaticon.com/512/919/919825.png" alt="Backend" style="width:60px; height:60px; object-fit:cover; margin-right:15px;">
+      <h6 class="mb-0">Backend Development</h6>
+    </div>
+
+    <!-- Course 9 -->
+    <div class="course-card d-flex align-items-center" style="flex:1 1 30%; padding:10px 0;">
+      <img src="https://cdn-icons-png.flaticon.com/512/2910/2910733.png" alt="DevOps" style="width:60px; height:60px; object-fit:cover; margin-right:15px;">
+      <h6 class="mb-0">DevOps Essentials</h6>
+    </div>
+
+    <!-- Course 10 -->
+    <div class="course-card d-flex align-items-center" style="flex:1 1 30%; padding:10px 0;">
+      <img src="https://cdn-icons-png.flaticon.com/512/3135/3135719.png" alt="Consulting" style="width:60px; height:60px; object-fit:cover; margin-right:15px;">
+      <h6 class="mb-0">Consulting Basics</h6>
+    </div>
+
+    <!-- Course 11 -->
+    <div class="course-card d-flex align-items-center" style="flex:1 1 30%; padding:10px 0;">
+      <img src="https://cdn-icons-png.flaticon.com/512/2965/2965567.png" alt="Healthcare" style="width:60px; height:60px; object-fit:cover; margin-right:15px;">
+      <h6 class="mb-0">Healthcare Management</h6>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const roleData = {
+  "Popular": [
+    { title: "Data Analyst", desc: "Generate insights from data.", img: "https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://images.ctfassets.net/00atxywtfxvd/6gKoZ1AVu36CMpmu3N3BZw/51e59b6ed5e46b50bfb98c738b3b2329/data-analyst-hero_2x.png?auto=format%2Ccompress&dpr=2&w=720" },
+    { title: "Data Scientist", desc: "Analyze and interpret complex data.", img: "https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://images.ctfassets.net/00atxywtfxvd/5rYF1dB5rQdD8Ude60Vcgk/a64d122febc9a54ee56402dd3d012042/Data_Scientist-hero_2x.png?auto=format%2Ccompress&dpr=2&w=720" },
+    { title: "Machine Learning Engineer", desc: "Build and deploy ML models.", img: "https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://images.ctfassets.net/00atxywtfxvd/69cNAmQMmrlgOZiqDhQ2cP/b53c174c81e14d7a4c1a5d307db9a128/Machine_Learning_Engineer-hero_2x.png?auto=format%2Ccompress&dpr=2&w=720" }
+  ],
+  "Software Engineering & IT": [
+    { title: "Frontend Developer", desc: "Work on user interfaces and web apps.", img: "https://cdn-icons-png.flaticon.com/512/919/919828.png" },
+    { title: "Backend Developer", desc: "Develop server-side logic and APIs.", img: "https://cdn-icons-png.flaticon.com/512/919/919825.png" },
+    { title: "DevOps Engineer", desc: "Manage CI/CD and infrastructure.", img: "https://cdn-icons-png.flaticon.com/512/2910/2910733.png" }
+  ],
+  "Business": [
+    { title: "Business Analyst", desc: "Analyze business processes and data.", img: "https://cdn-icons-png.flaticon.com/512/3144/3144456.png" },
+    { title: "Project Manager", desc: "Lead and manage projects efficiently.", img: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png" },
+    { title: "Consultant", desc: "Provide business solutions and advice.", img: "https://cdn-icons-png.flaticon.com/512/3135/3135719.png" }
+  ],
+  "Sales & Marketing": [
+    { title: "Marketing Specialist", desc: "Plan and execute marketing campaigns.", img: "https://cdn-icons-png.flaticon.com/512/3135/3135710.png" },
+    { title: "Sales Executive", desc: "Drive sales and manage clients.", img: "https://cdn-icons-png.flaticon.com/512/3135/3135720.png" }
+  ],
+  "Data Science & Analytics": [
+    { title: "Data Analyst", desc: "Generate insights from data.", img: "https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://images.ctfassets.net/00atxywtfxvd/6gKoZ1AVu36CMpmu3N3BZw/51e59b6ed5e46b50bfb98c738b3b2329/data-analyst-hero_2x.png?auto=format%2Ccompress&dpr=2&w=720" },
+    { title: "Data Scientist", desc: "Analyze and interpret complex data.", img: "https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://images.ctfassets.net/00atxywtfxvd/5rYF1dB5rQdD8Ude60Vcgk/a64d122febc9a54ee56402dd3d012042/Data_Scientist-hero_2x.png?auto=format%2Ccompress&dpr=2&w=720" },
+    { title: "Machine Learning Engineer", desc: "Build and deploy ML models.", img: "https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://images.ctfassets.net/00atxywtfxvd/69cNAmQMmrlgOZiqDhQ2cP/b53c174c81e14d7a4c1a5d307db9a128/Machine_Learning_Engineer-hero_2x.png?auto=format%2Ccompress&dpr=2&w=720" }
+  ],
+  "Healthcare": [
+    { title: "Healthcare Manager", desc: "Manage healthcare projects and teams.", img: "https://cdn-icons-png.flaticon.com/512/2965/2965567.png" },
+    { title: "Public Health Specialist", desc: "Work on health initiatives and policies.", img: "https://cdn-icons-png.flaticon.com/512/2965/2965562.png" }
+  ]
+};
+
+    const roleCols = document.querySelectorAll('.role-col div');
+    const deptContent = document.querySelector('.department-roles-row .dept-content');
+
+    function renderRoles(deptName) {
+  const roles = roleData[deptName] || [];
+  let html = '';
+  roles.forEach(r => {
+    html += `
+      <div class="role-card">
+        <img src="${r.img}" alt="${r.title}" style="width:50%; height:40%; margin-bottom:10px;">
+        <h5>${r.title}</h5>
+        <p>${r.desc}</p>
+      </div>`;
+  });
+  deptContent.innerHTML = html;
+    }
+
+    roleCols.forEach(col => {
+      col.addEventListener('click', () => {
+        // Remove active class from all
+        document.querySelectorAll('.role-col').forEach(rc => rc.classList.remove('active'));
+        col.parentElement.classList.add('active');
+        const deptName = col.textContent;
+        renderRoles(deptName);
+      });
+    });
+
+    // Initially show Popular roles
+    renderRoles("Popular");
+    // Add default active class to "Popular"
+document.querySelector('.role-col div').parentElement.classList.add('active');
+  </script>
+
+</body>
+</html>
+
